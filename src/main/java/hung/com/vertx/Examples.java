@@ -12,8 +12,10 @@ import io.vertx.serviceproxy.ServiceProxyBuilder;
 
 /**
  * các ví dụ về cách dùng Vertx-service-proxy để classload Implement Class đc gen bởi vertx-codegen => xem pom.xml
+ * vertx-codegen sẽ gen implement Class dùng Eventbus (ko phải database, http,...).
+ * Phần ClassLoad ko hay bằng java SPI (Service Provider Interface).
  * 
- * 
+ * Mục đích project này: để hiểu Vertx-service-proxy vận hành thế nào => nhằm đọc hiểu source code của Vertx sample.
  */
 public class Examples {
 
@@ -76,7 +78,7 @@ public class Examples {
 		 * Consumer khi nhận đc Message sẽ kích hoạt Handler mà Vertx-Service-proxy gen tự động tương ứng với MyDatabaseConnection.class
 		 */
 		MessageConsumer<JsonObject> consumer = new ServiceBinder(vertx)
-				.setAddress("database-service-address")
+				.setAddress("database-service-address")				// address on Eventbus
 				.register(MyDatabaseConnection.class, service);   // tạo một comsumer với address = "database-service-address" tren eventbus
 	}
 
@@ -90,12 +92,12 @@ public class Examples {
 		 * Consumer khi nhận đc Message sẽ kích hoạt Handler mà Vertx-Service-proxy gen tự động tương ứng với MyDatabaseConnection.class
 		 */
 		MessageConsumer<JsonObject> consumer = binder
-				.setAddress("database-service-address")
+				.setAddress("database-service-address")          // address on Eventbus
 				.register(MyDatabaseConnection.class, service);  // tạo một comsumer với address = "database-service-address" tren eventbus
 
 		// ....
 
-		//================ Unregister your service =================
+		//================ Unregister consumer tren EventBus =================
 		binder.unregister(consumer);
 	}
 
