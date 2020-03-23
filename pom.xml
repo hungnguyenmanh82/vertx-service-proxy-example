@@ -6,52 +6,107 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
-		<stack.version>4.0.0-SNAPSHOT</stack.version>
+		<!-- ${stack.version} -->
+		<vertx.version>3.8.5</vertx.version>
 	</properties>
-	
-<!-- 	<dependencyManagement>
+
+    <!-- all vertx dependency will use  ${vertx.version} -->
+	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>io.vertx</groupId>
 				<artifactId>vertx-dependencies</artifactId>
-				<version>${stack.version}</version>
+				<version>${vertx.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 		</dependencies>
-	</dependencyManagement> -->
+	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-core</artifactId>
-			<version>3.8.5</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-service-proxy</artifactId>
-			<version>3.8.5</version>
 		</dependency>
 
-		<!-- provided: đây là thư viện gen code, ko cần add vào Lib compile -->
+		<!-- provided: chú ý phần build plugin for code-gen -->
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-codegen</artifactId>
-			<version>3.8.5</version>
-			<classifier>processor</classifier>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
+			<!-- add Generated folder to Eclipse (need Update Maven pom.xml to eclipse) -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.basedir}/src/main/generated</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- compile plugin -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.7.0</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<!-- compile this folder as root of class -->
+					<generatedSourcesDirectory>src/main/generated</generatedSourcesDirectory>
+					<generatedTestSourcesDirectory>src/test/generated</generatedTestSourcesDirectory>
 				</configuration>
+
+				<!-- config for code generated -->
+				<executions>
+					<execution>
+						<id>default-compile</id>
+						<configuration>
+							<annotationProcessors>
+								<annotationProcessor>io.vertx.codegen.CodeGenProcessor</annotationProcessor>
+							</annotationProcessors>
+							<generatedSourcesDirectory>src/main/generated</generatedSourcesDirectory>
+							<compilerArgs>
+								<arg>-Acodegen.output=${project.basedir}/src/main</arg>
+							</compilerArgs>
+						</configuration>
+					</execution>
+
+					<!-- config for test code generated -->
+					<execution>
+						<id>default-testCompile</id>
+						<configuration>
+							<annotationProcessors>
+								<annotationProcessor>io.vertx.codegen.CodeGenProcessor</annotationProcessor>
+							</annotationProcessors>
+							<generatedTestSourcesDirectory>src/test/generated</generatedTestSourcesDirectory>
+							<compilerArgs>
+								<arg>-Acodegen.output=${project.basedir}/src/test</arg>
+							</compilerArgs>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
