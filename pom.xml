@@ -10,7 +10,7 @@
 		<vertx.version>3.8.5</vertx.version>
 	</properties>
 
-    <!-- all vertx dependency will use  ${vertx.version} -->
+	<!-- all vertx dependency will use ${vertx.version} -->
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -34,10 +34,23 @@
 			<artifactId>vertx-service-proxy</artifactId>
 		</dependency>
 
+		<!-- gen code for javaScript: see "/src/main/generated/generated-js" -->
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-sockjs-service-proxy</artifactId>
+		</dependency>
+
 		<!-- provided: chú ý phần build plugin for code-gen -->
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-codegen</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- gen code for javaScript: see "/src/main/generated/generated-js" -->
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-lang-js</artifactId>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -64,7 +77,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<!-- compile plugin -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

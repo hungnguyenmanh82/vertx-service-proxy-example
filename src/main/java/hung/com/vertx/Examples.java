@@ -20,7 +20,7 @@ import io.vertx.serviceproxy.ServiceProxyBuilder;
 public class Examples {
 
 	/**
-	 * vd về tạo request/response eventbus
+	 * vd về tạo request/response eventbus => ko dùng vertx-service-proxy
 	 */
 	public void example1(Vertx vertx) {
 		// Assume database service is already deployed somewhere....
@@ -53,14 +53,14 @@ public class Examples {
 	/**
 	 * vd về lấy Implement Class của Interface từ ClassLoad bằng Vertx-Service-proxy lib  => xem pom.xml
 	 */
-	public MyDatabaseConnection proxyCreation(Vertx vertx, DeliveryOptions options) {
+	public AccountService proxyCreation(Vertx vertx, DeliveryOptions options) {
 		ServiceProxyBuilder builder = new ServiceProxyBuilder(vertx).setAddress("database-service-address");
 		
 		/**
 		 * Get Implement Class từ java ClassLoad tương ứng với MyDatabaseConnection at runtime
 		 * => rất giống với Java SPI (Service Provider Interface)
 		 */
-		MyDatabaseConnection service = builder.build(MyDatabaseConnection.class);
+		AccountService service = builder.build(AccountService.class);
 		// or with delivery options:
 //		MyDatabaseConnection service2 = builder.setOptions(options).build(MyDatabaseConnection.class);
 		
@@ -72,28 +72,28 @@ public class Examples {
 	 */
 	public void register(Vertx vertx, DeliveryOptions options) {
 		// Create an instance of your service implementation
-		MyDatabaseConnection service = proxyCreation(vertx, options);
+		AccountService service = proxyCreation(vertx, options);
 		
 		/**
 		 * Consumer khi nhận đc Message sẽ kích hoạt Handler mà Vertx-Service-proxy gen tự động tương ứng với MyDatabaseConnection.class
 		 */
 		MessageConsumer<JsonObject> consumer = new ServiceBinder(vertx)
 				.setAddress("database-service-address")				// address on Eventbus
-				.register(MyDatabaseConnection.class, service);   // tạo một comsumer với address = "database-service-address" tren eventbus
+				.register(AccountService.class, service);   // tạo một comsumer với address = "database-service-address" tren eventbus
 	}
 
 	public void unregister(Vertx vertx, DeliveryOptions options) {
 		ServiceBinder binder = new ServiceBinder(vertx);
 
 		// Create an instance of your service implementation
-		MyDatabaseConnection service = proxyCreation(vertx, options);
+		AccountService service = proxyCreation(vertx, options);
 
 		/**
 		 * Consumer khi nhận đc Message sẽ kích hoạt Handler mà Vertx-Service-proxy gen tự động tương ứng với MyDatabaseConnection.class
 		 */
 		MessageConsumer<JsonObject> consumer = binder
 				.setAddress("database-service-address")          // address on Eventbus
-				.register(MyDatabaseConnection.class, service);  // tạo một comsumer với address = "database-service-address" tren eventbus
+				.register(AccountService.class, service);  // tạo một comsumer với address = "database-service-address" tren eventbus
 
 		// ....
 
