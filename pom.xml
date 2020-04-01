@@ -89,7 +89,8 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
-					<encoding>UTF</encoding>
+					<!-- Eclipse use it-->
+					<encoding>UTF-8</encoding>
 					<!-- compile this folder as root of class -->
 					<generatedSourcesDirectory>src/main/generated</generatedSourcesDirectory>
 					<generatedTestSourcesDirectory>src/test/generated</generatedTestSourcesDirectory>
