@@ -10,9 +10,11 @@
 		<vertx.version>3.8.5</vertx.version>
 	</properties>
 
-	<!-- all vertx dependency will use ${vertx.version} -->
+	<!-- các dependencies version ở đây sẽ đc ưu tiên dùng-->
 	<dependencyManagement>
 		<dependencies>
+			<!-- all vertx dependencies will use ${vertx.version} -->
+			<!-- nếu vertx depedencies khai báo version cũng ko sao  -->
 			<dependency>
 				<groupId>io.vertx</groupId>
 				<artifactId>vertx-dependencies</artifactId>
@@ -27,11 +29,13 @@
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-core</artifactId>
+			<!-- version theo DependencyManagement -->
 		</dependency>
 
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-service-proxy</artifactId>
+			<!-- version theo DependencyManagement -->
 		</dependency>
 
 		<!-- gen code for javaScript: see "/src/main/generated/generated-js" -->
@@ -85,7 +89,7 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
-					<encoding>${project.build.sourceEncoding}</encoding>
+					<encoding>UTF</encoding>
 					<!-- compile this folder as root of class -->
 					<generatedSourcesDirectory>src/main/generated</generatedSourcesDirectory>
 					<generatedTestSourcesDirectory>src/test/generated</generatedTestSourcesDirectory>
